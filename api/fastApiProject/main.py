@@ -37,9 +37,14 @@ polls = [
     ])
 ]
 
-@app.get("/polls/active")
-async def getActivePoll():
-    return polls[0]
+@app.get("/polls/{pollId}")
+async def getPollById(pollId: int):
+    foundPoll: None
+    for poll in polls:
+        if(poll.id == pollId):
+            return poll
+
+    raise HTTPException(status_code=404, detail="Could not find poll with specified id!")
 
 @app.get("/polls/{pollId}/votes")
 async def getPollVotes(pollId: int):
