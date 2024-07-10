@@ -15,6 +15,9 @@ const Vote = () =>  {
     function handleVote(firstName: string, lastName: string): any {
         axios.post("http://localhost:8000/polls/" + pollId + "/vote/" + firstName + "/" + lastName).then(vote => {
             alert('Succesfully voted!');
+        }).catch(() => {
+            //Usually better errorhandling here and printing the message.
+            alert('You have already voted!')
         })
     }
 
@@ -26,7 +29,7 @@ const Vote = () =>  {
       <>
           {poll?.question}
           {poll?.answerOptions.map((o, i) => {
-              return <button onClick={() => handleVote('Ramon', 'Peek')}>
+              return <button key={o.id} onClick={() => handleVote('Ramon', 'Peek')}>
                   {o.text}
               </button>
           })
