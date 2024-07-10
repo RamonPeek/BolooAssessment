@@ -22,9 +22,8 @@ const Results = () =>  {
                 <b>Votes:</b>
                 {votes?.map((o: Vote, i) => {
                     return <li key={i}>
-                        {o.firstName}
-                        {o.lastName}
-
+                        {o.firstName} {o.lastName} -
+                        {o.answerId}
                     </li>
                 })
                 }

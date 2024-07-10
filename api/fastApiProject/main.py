@@ -22,9 +22,10 @@ class Answer:
         self.id = id
         self.text = text
 
-class Voter:
-    def __init__(self, pollId, firstName: str, lastName: str):
+class Vote:
+    def __init__(self, pollId, answerId, firstName: str, lastName: str):
         self.pollId = pollId
+        self.answerId = answerId
         self.firstName = firstName
         self.lastName = lastName
 
@@ -62,10 +63,13 @@ async def getPollVotes(pollId: int):
 
     return pollVotes
 
-@app.post("/polls/{pollId}/vote/{firstName}/{lastName}") #Usually things such as firstName and lastName would be retrieved from an accountIdentifier retrieved from an auth token/identifier.
-async def vote(pollId: int, firstName: str, lastName: str):
+@app.post("/polls/{pollId}/vote/{answerId}/{firstName}/{lastName}") #Usually things such as firstName and lastName would be retrieved from an accountIdentifier retrieved from an auth token/identifier.
+async def vote(pollId: int, answerId: int, firstName: str, lastName: str):
     if not pollId:
         raise HTTPException(status_code=400, detail="PollId is required!")
+
+    if not answerId:
+        raise HTTPException(status_code=400, detail="Answer is required!")
 
     if not firstName or not lastName:
         raise HTTPException(status_code=400, detail="Firstname and lastname are required!")
@@ -73,7 +77,7 @@ async def vote(pollId: int, firstName: str, lastName: str):
     if any(vote.firstName == firstName and vote.lastName == lastName for vote in votes):
         raise HTTPException(status_code=400, detail="Already voted!")
 
-    vote = Voter(pollId, firstName, lastName)
+    vote = Vote(pollId, answerId, firstName, lastName)
 
     votes.append(vote)
     return vote

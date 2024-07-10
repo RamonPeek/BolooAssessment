@@ -8,12 +8,15 @@ const Vote = () =>  {
     let pollId = 1; //For now it is hardcoded.
 
     const [poll, setPoll] = useState<Poll>();
+    const [firstName, setFirstName] = useState<string>();
+    const [lastName, setLastName] = useState<string>();
+
 
     const pollPromise = axios.get("http://localhost:8000/polls/" + pollId)
         .then(({ data }) => data);
 
-    function handleVote(firstName: string, lastName: string): any {
-        axios.post("http://localhost:8000/polls/" + pollId + "/vote/" + firstName + "/" + lastName).then(vote => {
+    function handleVote(answerId: number): any {
+        axios.post("http://localhost:8000/polls/" + pollId + "/vote/" + answerId + "/" + firstName + "/" + lastName).then(vote => {
             alert('Succesfully voted!');
         }).catch(() => {
             //Usually better errorhandling here and printing the message.
@@ -27,9 +30,25 @@ const Vote = () =>  {
 
   return (
       <>
+          Enter your name:
+          <input
+              value={firstName}
+              placeholder="first name"
+              onChange={(event) => {
+                  setFirstName(event.target.value);
+              }}
+          />
+          <input
+              value={lastName}
+              placeholder="last name"
+              onChange={(event) => {
+                  setLastName(event.target.value);
+              }}
+          />
+          <br/><br/>
           {poll?.question}
           {poll?.answerOptions.map((o, i) => {
-              return <button key={o.id} onClick={() => handleVote('Ramon', 'Peek')}>
+              return <button key={o.id} onClick={() => handleVote(o.id)}>
                   {o.text}
               </button>
           })
