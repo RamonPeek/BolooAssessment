@@ -42,9 +42,12 @@ async def getPollById(pollId: int):
     foundPoll: None
     for poll in polls:
         if(poll.id == pollId):
-            return poll
+            foundPoll = poll
 
-    raise HTTPException(status_code=404, detail="Could not find poll with specified id!")
+    if foundPoll is None:
+        raise HTTPException(status_code=404, detail="Could not find poll with specified id!")
+    else:
+        return foundPoll
 
 @app.get("/polls/{pollId}/votes")
 async def getPollVotes(pollId: int):
